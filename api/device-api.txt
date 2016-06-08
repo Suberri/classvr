@@ -1,0 +1,36 @@
+
+
+Teacher device:
+
+simple screen with the following button:
+
+Main Screen:
+    Start new Session 
+      session screen:
+          session name:
+          VR video name:
+          
+          start
+          stop
+          continue
+    Status
+        Connected devices
+          screen that show the VR client that are connecte
+    
+  
+api for teacher device:
+   ..../classvr/teacher/init/<teacher device info>
+   ..../classvr/teacher/session/load/name=<session name>
+   ..../classvr/teacher/session/stop/name=<session name>
+   ..../classvr/teacher/session/start/name=<session name>
+   ..../classvr/teacher/session/continue/name=<session name>
+
+api to student device:
+   ..../classvr/student/init/<student device info>
+        add device info to data base
+   ..../classvr/student/session/active
+       return active session name and Video name if any
+   
+   ..../classvr/student/action/next=<current action sequence numer>
+       return the next action( stop,start,continue)
+   
