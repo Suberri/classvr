@@ -11,15 +11,18 @@ import os
 import sys
 import pdb
 import BaseHTTPServer
+
 from SimpleHTTPServer import SimpleHTTPRequestHandler
-from geofinder import simpleGeoFinder  
-from httpReqHandler import geoRequestHandler
+from httpReqHandler     import classvrRequestHandler
         
-class config:
-   def __init__(fileName):
+cfgFile='./conf/config.ini'
+
+class classvrConfig:
+   def __init__(self,cfgFile):
         import ConfigParser
+        pdb.set_trace()
         Config = ConfigParser.ConfigParser()
-        Config.read(fileName)
+        Config.read(cfgFile)
         print Config.sections()
         print Config.options('vrServer')
         try:
@@ -28,10 +31,11 @@ class config:
             self.Port=8181
 
         
-class vrServer:
+class classvrServer:
     
     def  __init__(self):
         self.ServerStatus="ok"
+        cfg=classvrConfig(cfgFile)
         HandlerClass = SimpleHTTPRequestHandler
         ServerClass  = BaseHTTPServer.HTTPServer
         Protocol     = "HTTP/1.0"
@@ -41,7 +45,7 @@ class vrServer:
         HandlerClass.protocol_version = Protocol
         
         try:
-            self.httpd = ServerClass(server_address, geoRequestHandler)
+            self.httpd = ServerClass(server_address, classvrRequestHandler)
             sa = self.httpd.socket.getsockname()
         except Exception as e: 
             self.ServerStatus="failed"
@@ -49,8 +53,6 @@ class vrServer:
             return
 
         print "Serving HTTP on", sa[0], "port", sa[1], "..."
-        print 'request message example: curl  -d "longitude=-77.036133&latitude=40.513799" http://localhost:8080/'    
-  
   
   
     def  run(self):
@@ -64,7 +66,8 @@ class vrServer:
                 print e
         
         
-if __name__ == "__main__":  
-    vrServer=vrServer()
+if __name__ == "__main__":
+    pdb.set_trace()
+    vrServer=classvrServer()
     vrServer.run()
     

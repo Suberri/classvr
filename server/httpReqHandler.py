@@ -10,13 +10,11 @@ __email__ = "suberri@gmail.com"
 import json
 import pdb
 from SimpleHTTPServer import SimpleHTTPRequestHandler
-from geofinder import simpleGeoFinder  
 
 
-helpMsg=r'request message example: curl  -d "longitude=-77.036133&latitude=40.513799" http://localhost:8080/'
-geoFinder=simpleGeoFinder("states.json")    
+helpMsg=r'help msg'
 
-class geoRequestHandler (SimpleHTTPRequestHandler) :
+class classvrRequestHandler (SimpleHTTPRequestHandler) :
     
     def respone(self,msg):
         self.send_response(200)
@@ -28,33 +26,11 @@ class geoRequestHandler (SimpleHTTPRequestHandler) :
         
     
     def checkPostRequest(self,post_body):
-        strCordinate=post_body.replace("&"," ")
-        print strCordinate
-        jsonCordinate=dict([x.split('=') for x in strCordinate.split()])
-        print jsonCordinate
+        request=post_body.replace("&"," ")
+        print request
+        reqDict=dict([x.split('=') for x in request.split()])
+        print reqDict
         
-        latitude=longitude=None
-        postReqStatus="ok"
-        try:  
-           latitude=jsonCordinate['latitude']
-        except: 
-           postReqStatus="ERROR: invalid request - missing 'latitude'\n" + helpMsg
-           return  postReqStatus,latitude,longitude
-           
-        try: 
-           longitude=jsonCordinate['longitude']
-        except: 
-           postReqStatus= "ERROR invalid request - missing 'longitude'\n"  + helpMsg 
-           return  postReqStatus,latitude,longitude
-        
-        try: 
-            latitude=float(latitude)
-            longitude=float(longitude)
-        except:
-            postReqStatus= "Invalid coordinates - must be numbers\n" +  helpMsg      
-   
-        return  postReqStatus,latitude,longitude
-   
         
     def do_GET(self) :
         print "path="+self.path+"\n"
@@ -66,7 +42,6 @@ class geoRequestHandler (SimpleHTTPRequestHandler) :
         self.wfile.write("\n")
 
         
-        
     def do_POST(self):
         content_len = int(self.headers.getheader('content-length', 0))
         post_body = self.rfile.read(content_len)
@@ -76,9 +51,5 @@ class geoRequestHandler (SimpleHTTPRequestHandler) :
         if postReqStatus != "ok":
             self.respone(postReqStatus)
         else:
-            msg=geoFinder.findState(lon,lat)
-            if msg !=None:
-                msg= "The provided geo point is in: {0}".format(msg)
-            else:    
-                msg= "No state found for the The provided geo point"
+            msg= "process req"
             self.respone(msg)
