@@ -21,7 +21,10 @@ def startServer():
     vrServer=classvrServer()
     vrServer.run()
 
-
+def startMultiThreadsServer():
+    from vrserver import mtServer
+    mtServer()
+    
 
 def startClient():
     print ('start classvr client')
@@ -29,5 +32,5 @@ def startClient():
 if __name__ == "__main__":  
     for pkg in packages:
         sys.path.insert(0,pkg)  
-    startServer() 
+    startMultiThreadsServer() 
     

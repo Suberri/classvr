@@ -12,27 +12,42 @@ import sys
 import pdb
 import BaseHTTPServer
 
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from SocketServer import ThreadingMixIn
+import threading
+
+
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 from httpReqHandler     import classvrRequestHandler
         
 cfgFile='./conf/config.ini'
 
+
+    
 class classvrConfig:
    def __init__(self,cfgFile):
         import ConfigParser
-        pdb.set_trace()
         Config = ConfigParser.ConfigParser()
         Config.read(cfgFile)
         print Config.sections()
-        print Config.options('vrServer')
+        print Config.options('vrserver')
         try:
-            self.Port=Config.get('vrServer', 'Port')
+            self.Port=Config.get('vrserver', 'Port')
         except:
             self.Port=8181
-
+            
+            
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
+    
+ 
+class mtServer():
+    def __init__(self):  
+        server = ThreadedHTTPServer(('localhost', 8080), classvrRequestHandler)
+        print 'Starting server, use <Ctrl-C> to stop'
+        server.serve_forever()  
         
 class classvrServer:
-    
     def  __init__(self):
         self.ServerStatus="ok"
         cfg=classvrConfig(cfgFile)
