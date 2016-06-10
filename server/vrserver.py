@@ -27,14 +27,17 @@ cfgFile='./conf/config.ini'
 class classvrConfig:
    def __init__(self,cfgFile):
         import ConfigParser
-        Config = ConfigParser.ConfigParser()
-        Config.read(cfgFile)
-        print Config.sections()
-        print Config.options('vrserver')
-        try:
-            self.Port=Config.get('vrserver', 'Port')
-        except:
-            self.Port=8181
+        self.cfg={}
+        self.cfg['vrserver']={'port':'8080','host':'localhost'}
+        config = ConfigParser.ConfigParser()
+        config.read(cfgFile)
+        for section in config.sections():
+           if not section in self.cfg:  # make sure not to overite the default values
+                self.cfg[section]={}
+           for option in config.items(section):
+              oName=option[0]
+              oValue=option[1]
+              self.cfg[section][oName]=oValue
             
             
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
@@ -43,8 +46,12 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
  
 class mtServer():
     def __init__(self):  
-        server = ThreadedHTTPServer(('localhost', 8080), classvrRequestHandler)
-        print 'Starting server, use <Ctrl-C> to stop'
+        self.ServerStatus="ok"
+        self.cfg=classvrConfig(cfgFile).cfg
+        host=self.cfg['vrserver']['host']
+        port=self.cfg['vrserver']['port']
+        server = ThreadedHTTPServer((host, int(port)), classvrRequestHandler)
+        print 'Starting server host={0} port={1}, use <Ctrl-C> to stop'.format(host, port)
         server.serve_forever()  
         
 class classvrServer:

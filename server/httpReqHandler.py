@@ -13,42 +13,37 @@ from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import threading
 
+INVALID_REQUEST=1001
 
 helpMsg=r'help msg'
 
 
-reqSchema      = { 0:'classvr',1:['teacher','student'],2:'action'}
+reqSchema      = { 0:'classvr',1:['info','teacher','student'],2:'action'}
 teacherActions = ['session-play','session-pause','session-restart','session-close']
 studentActions = ['get-next']
-
-
          
                   
-class section():
-    def __init__(self,req):
-        print req
-        actor=req[0]
-        return reqProc[actor](req[1:])
+def  section(req,reqHanderInstance=None):
+    print req
+    actor=req[0]
+    if actor in reqHandlers:
+        return reqHandlers[actor](req[1:],reqHanderInstance)
+    elif actor in instanceReqHandlers:
+        return instanceReqHandlers[actor](reqHanderInstance,req[1:])
+
    
-
-class teacher():
-    def __init__(self,req):
-        print req
-       
-
-reqProc= {  'classvr': section,'teacher': teacher}
-      
-        
-class classvrRequestHandler (BaseHTTPRequestHandler) :
+def teacher(req,reqHanderInstance=None):
+    return 'Got a teacher request'   
     
-    def respone(self,msg):
-        self.send_response(200)
-        #send headers:
-        self.send_header("Content-type:", "text/html")
-        # send a blank line to end headers:
-        self.wfile.write("\n")
-        self.wfile.write(msg)
+    
+def student(req,reqHanderInstance=None):
+    return 'Got a teacher request'    
+
+    
+reqHandlers = {  'classvr':section,'teacher':teacher,'student':student}            
+
         
+class classvrRequestHandler (BaseHTTPRequestHandler) :     
     
     def checkPostRequest(self,post_body):
         request=post_body.replace("&"," ")
@@ -59,16 +54,24 @@ class classvrRequestHandler (BaseHTTPRequestHandler) :
         
     def checkPath(self):
         self.reqParts=self.path.split(r'/')
-        if len(self.reqParts) == 0:
+        if len(self.reqParts) < 2:
             return 'invalid req'
-        del a[0]
-        print self.reqParts
-        for i in range (0,len(reqSchema)):
+        del self.reqParts[0]
+        for i in range (0,len(reqSchema)-1):
             if self.reqParts[i] not in reqSchema[i]:
-                return 'invalid req'
-        return 'ok'
-            
-    def do_GET(self):
+                self.errorMsg='invalid req'
+                return INVALID_REQUEST
+        return 0
+
+        
+    def procReq(self,reqParts):
+        section=reqParts[0]
+        if section in reqHandlers:
+            return reqHandlers[section](reqParts[1:],self)
+        else:
+            return 'invalid URL'
+        
+    def getMsgInfo(self,req=None):
         parsed_path = urlparse.urlparse(self.path)
         message_parts = [
                 'THREADING VALUES:',
@@ -91,8 +94,17 @@ class classvrRequestHandler (BaseHTTPRequestHandler) :
         for name, value in sorted(self.headers.items()):
             message_parts.append('   %s=%s' % (name, value.rstrip()))
         message_parts.append('')
-        message = '\r\n'.join(message_parts)
+        return '\r\n'.join(message_parts)    
+    
+
+    def do_GET(self):
+        self.errorMsg=None
+        parsed_path = urlparse.urlparse(self.path)
+        message = self.getMsgInfo()
         self.send_response(200)
+        if self.checkPath() == 0:
+            message=self.procReq(self.reqParts)
+        else: message=self.errorMsg   
         self.end_headers()
         self.wfile.write(message)
         return
@@ -111,3 +123,5 @@ class classvrRequestHandler (BaseHTTPRequestHandler) :
         else:
             msg= "process req"
             self.respone(msg)
+            
+instanceReqHandlers = {'info':classvrRequestHandler.getMsgInfo}

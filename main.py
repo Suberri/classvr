@@ -13,14 +13,6 @@ import pdb
 
 packages=['server','api','conf']
 
-
-def startServer():
-    from vrserver import classvrServer
-    from vrserver import classvrConfig
-    print ('start classvr server')
-    vrServer=classvrServer()
-    vrServer.run()
-
 def startMultiThreadsServer():
     from vrserver import mtServer
     mtServer()
