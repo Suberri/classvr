@@ -5,6 +5,8 @@ Teacher device:
 simple screen with the following button:
 
 Main Screen:
+    class name should apear as the screen name
+        
     Create a VR Session:
           session name:
           VR video name:
@@ -19,7 +21,13 @@ Main Screen:
           Pause
           continue
           close
-          
+    Debug
+    .../classvr/debug/info/on
+    .../classvr/debug/info/off
+    .../classvr/debug/info/setting/show-all
+    .../classvr/debug/info/setting/show-path
+    .../classvr/debug/info/setting/show-client
+    .../classvr/debug/info/setting/show-server
     Status
         Connected devices
           screen that show the VR client that are connecte
