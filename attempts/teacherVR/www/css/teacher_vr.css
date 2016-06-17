@@ -1,0 +1,96 @@
+
+/* 
+    Created on : Jun 14, 2016, 6:13:10 PM
+    Author     : ami
+*/
+
+.class_header_buttons 
+{
+    display: block; 
+    /*float: left;*/ 
+    margin: 2px; 
+    margin-top: 5px; 
+    padding-top: 2px!important; 
+    /*padding-bottom: 5px;*/ 
+    padding-left: 1px; 
+    padding-right: 2px;
+    
+    background: transparent!important;
+    
+    height: 57px;
+    width: auto!important;
+    /*font-size: 0.7em;*/
+    /*width: 30px!important;*/ 
+    /*not work background: #EDEDED;*/
+/*    
+    opacity: 0.7;
+    filter: alpha(opacity=40); */
+}
+
+.header_div_class
+{
+    background: lightgray
+}
+
+.class_statusbar_div {
+    height: 40px!important;
+    display: block; 
+    /*padding: 0 auto;*/ 
+    /*padding-top: px;*/
+    padding-top: 3px;
+    padding-right: 1px; 
+    /*padding-left: 1px;*/ 
+    /*padding: 0px!important;*/ 
+    background: blanchedalmond;
+    border-style: solid;
+    border-width: 0px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: lightblue;
+    
+    margin: 1px;
+}
+
+.class_statusbar_items {
+    /*not work*/
+    /*color: black;*/
+    /*text-decoration-color: black;*/
+    /*text-align: center;*/
+
+    /*work*/
+    text-decoration: none;
+    /*font-family: Consolas, "Segoe UI", Calibri, sans-serif;*/
+    /*margin: 1px;*/
+    /*margin-top: 1px;*/
+    /*margin-bottom: 5px;*/
+    text-align: center; /*some time not help*/
+    padding: 3px;
+    /*padding-top: 4px;*/
+    padding-right: 3px;
+    /*none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset*/
+    border-style: solid;
+    border-width: 0px;
+    border-right-width: 0px;
+    border-color: blue;
+    
+    /*box-shadow: 5px;*/
+    /*box-shadow: 1px 0px 1px #888888;*/
+    
+    /*width: 40px!important;*/
+    width: auto!important;
+    height: 28px!important;
+    
+    /*color: black;*/
+    margin-top: 0px;
+    /*change the gap for the right statusbar items*/
+    margin-right: 3px;
+    margin-bottom: 0px;
+    float: right;
+}
+
+.class_statusbar_buttons
+{
+    top: 8px!important;
+    height: 20px!important;
+    width: 21px!important;
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Teacher Virtual Reality</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="shortcut icon" href="img/teacher_vr_24x24.ico">
+        
+    </head>
+    <body>
+        
+        <!--style="display: none" show in the end of ready-->
+        <div id="div_main_id" style="display: none">
+
+            <!--Header-->
+            <div  id="header_div_id" data-role="none" class="ui-header-fixed  header_div_class" data-mini="false">    
+                <h2 style="margin-right: 20px; float: right;">Teacher</h2> 
+                <button id="startVR_button_id" onclick="TeacherVR.playVR()"  class="class_header_buttons" style="float: left;" title="Start">
+                    <img id="startVR_button_img_id"  src="img/play_48x48.png" alt="=>">
+                </button>
+            
+
+            </div> <!--header-->
+            
+            <!--=========================-->
+            
+            
+            <!--=========================-->
+            <!--statusbar-->
+            <div  id="statusbar_div_id" data-role="none" class="ui-footer-fixed class_statusbar_div">    
+
+                <button id="debug_button_id" onclick="TeacherVR.toggleServerDebug();"  class="class_statusbar_items class_statusbar_buttons" style="float: right; " title="Server Debug Off">
+                    <img id='debug_server_img_id' src="img/debug_server_16x16.png" alt="D">
+                </button>
+                
+            </div> <!--statusbar-->
+            
+        </div> <!--div_main-->
+
+        <!--===========Third Party========================================-->
+        
+        <!--======= jquery.js-->
+        <!--<script type="text/javascript" src="third_party/libs/jquery/jquery-2.1.1.js"></script>-->
+        <!--v2.1.1-->
+        <script type="text/javascript" src="third_party/libs/jquery/jquery-2.1.1.min.js"></script>
+        <!-- ====== -->
+
+        <!-- ====== jquery.mobile -->
+        <!--jquery.mobile-git.js before jquery-ui.js (solve dialog issue)-->
+        <!--1.5.0pre <script type="text/javascript" src="third_party/libs/jquery-mobile/jquery.mobile-git.js"></script>-->
+        <!--1.5.0pre <link href="third_party/libs/jquery-mobile/jquery.mobile-git.css" rel="stylesheet" type="text/css" property="">-->
+        <!--1.4.4 | Git 2014-09-12T16:43:26Z--> 
+        <script type="text/javascript" src="third_party/libs/jquery-mobile/jquery.mobile-1.4.4.min.js"></script>
+        <link href="third_party/libs/jquery-mobile/jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css" property="">
+        <!-- ====== -->
+
+        <!-- ====== cordova.js -->
+        <!--this not downloaded it's taken from platforms\android\assets\www\cordova.js or platforms\android\platform_www\cordova.js-->
+        <!--or platforms\android\build\intermediates\assets\debug\www\cordova.js-->
+        <!--needed for device ready see onDeviceReady()-->
+        <script type="text/javascript" src="cordova.js"></script>
+        
+        <!--=======jquery-ui.js-->
+        <!--v1.10.3 - 2013-05-03 <script type="text/javascript" src="third_party/libs/jqueryui/jquery-ui.js"></script>-->
+        <!--v1.10.3 - 2013-05-03<link href="third_party/libs/jqueryui/css/base/jquery-ui.css" rel="stylesheet" type="text/css" property="">-->
+        <!--v1.11.2 - 2014-10-16-->
+        <script type="text/javascript" src="third_party/libs/jqueryui/jquery-ui.min.js"></script>
+        <link href="third_party/libs/jqueryui/jquery-ui.min.css" rel="stylesheet" type="text/css" property="">
+        <!-- ====== -->
+   
+        <!--sprintf-0.7-beta1.js-->
+        <script src="third_party/libs/strings/sprintf.js" type="text/javascript"></script>
+
+        <!--====Self lib======-->
+
+        <!--utils_errors-->
+        <script src="js/slibs/utils_errors.js" type="text/javascript"></script>
+
+        <!--SystemEx-->
+        <script src="js/slibs/systemex.js" type="text/javascript"></script>
+        
+        
+        <!--====Teacher VR======-->
+         
+        <!--teacher_vr-->
+        <script src="js/teacher_vr.js" type="text/javascript"></script>
+        <link   href="css/teacher_vr.css" rel="stylesheet" type="text/css" property="">
+        
+        
+        <!--=================================== -->
+        <!--===========start script============ -->
+        <script type="text/javascript">
+            
+            /* global TeacherVR, ErrorUtils */
+
+                //may not need
+                $(document).bind("mobileinit", function() {
+                    $.mobile.defaultPageTransition = 'none';
+                    $.mobile.defaultDialogTransition = 'none';
+                    $.mobile.useFastClick = true;
+                });
+    
+                    
+                TeacherVR.initBeforeReady();
+
+                $(document).ready(function ()
+                {
+                    
+                    document.addEventListener("deviceready", TeacherVR.onDeviceReady, false);
+                    
+                    try
+                    {
+                        TeacherVR.init();
+
+                    }
+                    catch(ex)
+                    {
+                        //throw new Error('try');
+                        //throw 'try';
+                        ErrorUtils.ConsoleError(ex, 'Startup error');
+                    }
+                    finally
+                    {
+                        //it is hiding until ready
+                        $('#div_main_id').show();
+
+                        //TeacherVR.setHelp();
+                    }
+
+                });
+
+        </script>
+        
+    </body>
+</html>
