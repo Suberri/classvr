@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.classvr.teacherVR"
+        },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.classvr.teacherVR"
         }

@@ -4,7 +4,9 @@
 
 var TeacherVR = function()
 {
-    var fDebug = "false"; //true only with 'true', can set on run
+    var fDebug = "true"; //true only with 'true', can set on run
+    
+    var fDeviceInfoMap;
     
 
     //call on new
@@ -22,10 +24,14 @@ var TeacherVR = function()
 
     var initMainPage = function()
     {
-        
+        if (typeof device !== "undefined")// && device.platform === "Android")
+        {
+            var zUuid = device.uuid;
+            alert('huid =' + zUuid);
+        }
         try
         {
-            
+           
         }
         catch (ex)
         {
@@ -94,22 +100,54 @@ var TeacherVR = function()
         }
     };//fConstructor.initBeforeReady = function()
     
-
+    
     //never call on the browser and desktop only on device as android
     //breakpoint not work here but can use alert
+    //http://docs.phonegap.com/en/3.0.0/cordova_device_device.model.md.html#device.model
     fConstructor.onDeviceReady = function()
     {
         
         //alert('onDeviceReady');
         debug(DebugTypes.ConsoleInfo, '-- onDeviceReady --');
-        if (typeof device !== "undefined" && device.platform === "Android")
-        {//this if work
-            //alert('device.platform === "Android"');
-            debug(DebugTypes.ConsoleInfo, '-- device.platform === "Android" --');
+        //need cordova-plugin-device and prevent update-plugins see build.xml in nbproject folder
+        //this prevent not working every second send to android, after you set the plugin with
+        //command in platform/android folder: cordova plugin add cordova-plugin-device
+        if (typeof device !== "undefined")
+        {
+            //alert('device is defined');
+            
+            fDeviceInfoMap = {};
+            fDeviceInfoMap['name'] = device.name;
+            fDeviceInfoMap['cordova'] = device.cordova;
+            fDeviceInfoMap['platform'] = device.platform;
+            fDeviceInfoMap['uuid'] = device.uuid;
+            fDeviceInfoMap['version'] = device.version;
+            fDeviceInfoMap['model'] = device.model;
+
+            if (isDebug_())        
+            {
+                showDeviceInfo();
+            }
+        }//if (typeof device !== "undefined")
+            
             //navigator.app.overrideBackbutton(true);Deprecating
-        }    
         document.addEventListener("backbutton", onBackClickEvent, false);
         //document.addEventListener("menubutton", onMenuClickEvent, false);
+    };
+
+    var showDeviceInfo = function()
+    {
+        //if (typeof device === "undefined")
+        if (!fDeviceInfoMap)
+            return;
+        var zDeviceInfo = //JSON.stringify(fDeviceInfoMap);
+                    'Device Name: '     + fDeviceInfoMap['name'] + '\n' + //'<br />'
+                    'Device Cordova: '  + fDeviceInfoMap['cordova'] + '\n' +
+                    'Device Platform: ' + fDeviceInfoMap['platform'] + '\n' +
+                    'Device UUID: '     + fDeviceInfoMap['uuid'] + '\n' +
+                    'Device Version: '  + fDeviceInfoMap['version'] + '\n' +
+                    'Device Model: '    + fDeviceInfoMap['model'];
+        alert(zDeviceInfo);
     };
 
     //never call on the browser and desktop only on device as android
