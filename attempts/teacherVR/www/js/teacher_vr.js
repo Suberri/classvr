@@ -4,7 +4,6 @@
 
 var TeacherVR = function()
 {
-    var fDebug = "false"; //true only with 'true', can set on run
     var fDeviceInfoMap;
     
     var ClientType = {
@@ -28,7 +27,9 @@ var TeacherVR = function()
     
     fConstructor.init = function()
     {
-        debug(DebugTypes.ConsoleInfo, '------------- Started -------------------');
+        debug(SystemEx.DebugTypes.ConsoleInfo, '------------- Started -------------------');
+        
+        SystemEx.addDebugClientChangedEvent(debugClientChangedEvent);
         
         setTimeout(function()
         {
@@ -64,50 +65,27 @@ var TeacherVR = function()
         }
     };        
     
-    fConstructor.isDebug = function()
+    fConstructor.isClientDebug = function()
     {
-        return isDebug_();
+        return isClientDebug_();
     };
-    var isDebug_ = function()
+    var isClientDebug_ = function()
     {
-        return fDebug === "true";
+        return SystemEx.isClientDebugOn();
+    };
+
+    var debug = function(aType, aMsg)
+    {
+        SystemEx.debug(aType, aMsg);
     };
     
-    var DebugTypes = 
-            {
-                Feedback: 'Feedback',
-                ConsoleInfo: 'ConsoleInfo',
-                ConsoleError: 'ConsoleError'
-            };
-
-    function debug(aType, aMsg)
-    {
-        if (!isDebug_())
-            return;
-        
-        switch (aType)
-        {
-            case DebugTypes.Feedback:
-                debugFeedback_(aMsg);
-                break;
-
-            case DebugTypes.ConsoleInfo:
-                console.info(aMsg);
-                break;
-                
-            case DebugTypes.ConsoleError:
-                console.error(aMsg);
-                break;
-        }
-    }
-
     fConstructor.initBeforeReady = function()
     {
         try
         {
             
             //alert('initBeforeReady');
-            debug(DebugTypes.ConsoleInfo, '------------- initBeforeReady -------------------');
+            debug(SystemEx.DebugTypes.ConsoleInfo, '------------- initBeforeReady -------------------');
 
 //            //get and set the SrvShare.Common IP and Port from the local storage
 //            //set need also for mobile
@@ -129,7 +107,7 @@ var TeacherVR = function()
     {
         
         //alert('onDeviceReady');
-        debug(DebugTypes.ConsoleInfo, '-- onDeviceReady --');
+        debug(SystemEx.DebugTypes.ConsoleInfo, '-- onDeviceReady --');
         //need cordova-plugin-device and prevent update-plugins see build.xml in nbproject folder
         //this prevent not working every second send to android, after you set the plugin with
         //command in platform/android folder: cordova plugin add cordova-plugin-device
@@ -145,7 +123,7 @@ var TeacherVR = function()
             fDeviceInfoMap['version'] = device.version;
             fDeviceInfoMap['model'] = device.model;
 
-            if (isDebug_())        
+            if (isClientDebug_())        
             {
                 showDeviceInfo();
             }
@@ -154,9 +132,14 @@ var TeacherVR = function()
             //navigator.app.overrideBackbutton(true);Deprecating
         document.addEventListener("backbutton", onBackClickEvent, false);
         //document.addEventListener("menubutton", onMenuClickEvent, false);
-    };
+    };//fConstructor.onDeviceReady = function()
 
-    var showDeviceInfo = function()
+    fConstructor.showDeviceInfo = function()
+    {
+        showDeviceInfo_();
+    };
+    
+    var showDeviceInfo_ = function()
     {
         //if (typeof device === "undefined")
         if (!fDeviceInfoMap)
@@ -179,7 +162,7 @@ var TeacherVR = function()
     //breakpoint not work here but can use alert
     function onBackClickEvent(aEvent)
     {
-        debug(DebugTypes.ConsoleInfo, '-- onBackClickEvent --');
+        debug(SystemEx.DebugTypes.ConsoleInfo, '-- onBackClickEvent --');
         //alert("-- onBackClickEvent --");     
         
         //---  ---
@@ -188,7 +171,7 @@ var TeacherVR = function()
             aEvent.preventDefault();
             aEvent.stopPropagation();
 
-            debug(DebugTypes.ConsoleInfo, '-- onBackClickEvent back to doc--');
+            debug(SystemEx.DebugTypes.ConsoleInfo, '-- onBackClickEvent back to doc--');
 
             //if (someDialog) 
             //    someDialog.dialog("close");
@@ -200,7 +183,7 @@ var TeacherVR = function()
         }
         else
         {
-            debug(DebugTypes.ConsoleInfo, '-- onBackClickEvent exit --');
+            debug(SystemEx.DebugTypes.ConsoleInfo, '-- onBackClickEvent exit --');
             navigator.app.exitApp();//works
             
             //saveGlobals();
@@ -248,14 +231,23 @@ var TeacherVR = function()
     
     fConstructor.toggleServerDebug = function()
     {
-        SystemEx.toggleServerDebug('debug_button_id', 'red', '');
-        if (SystemEx.isServerDebugOn())
+        SystemEx.toggleServerDebug('debug_server_button_id', 'red', '');
+    };
+
+    fConstructor.toggleClientDebug = function()
+    {
+        SystemEx.toggleClientDebug('debug_client_button_id', 'red', '');
+    };
+
+    var debugClientChangedEvent = function ()
+    {
+        if (SystemEx.isClientDebugOn())
         {
-            document.getElementById('debug_button_id').style.background = 'red';
+            document.getElementById('show_device_info_button_id').style.display = 'block';
         }
         else
         {
-            document.getElementById('debug_button_id').style.background = '';
+            document.getElementById('show_device_info_button_id').style.display = 'none';
         }
     };
     

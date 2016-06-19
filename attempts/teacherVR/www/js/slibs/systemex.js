@@ -15,6 +15,9 @@ var SystemEx = function()
     var fIP = 'localhost'; //'192.168.2.109'; //'192.168.43.88';
     var fPort = '8181';
 
+    var fClientDebugOn = false; //true only with 'true', can set on run
+    var fDebugClientChangedEventArr = [];
+
     //call on new
     var fConstructor = function SystemEx()
     {
@@ -29,7 +32,7 @@ var SystemEx = function()
     {
         fConstructor.AndroidVer = fConstructor.getAndroidVersion();
         if (fConstructor.AndroidVer)
-            fConstructor.isOldAndroid = !SystemEx.isAVerAtleastBVer(fConstructor.AndroidVer, '5.0');
+            fConstructor.isOldAndroid = !fConstructor.isAVerAtleastBVer(fConstructor.AndroidVer, '5.0');
     };
         
     //=----------------------------------------------------------------------
@@ -201,7 +204,7 @@ var SystemEx = function()
         fConstructor.requestFromServer('debug/info/' + zOnOff);
         
         var zElement = document.getElementById(aElementID);
-        if (SystemEx.isServerDebugOn())
+        if (fConstructor.isServerDebugOn())
         {
             zElement.title = 'Server Debug On';
             zElement.style.background = aOnColor;
@@ -216,9 +219,80 @@ var SystemEx = function()
     
     fConstructor.isServerDebugOn = function()
     {
+        return isServerDebugOn_();
+    };
+    var isServerDebugOn_ = function()
+    {
         return fServerDebugOn;
     };
+
+    fConstructor.toggleClientDebug = function(aElementID, aOnColor, aOffColor)
+    {
+        fClientDebugOn = !fClientDebugOn;
+        var zElement = document.getElementById(aElementID);
+        if (isClientDebugOn_())
+        {
+            zElement.title = 'Client Debug On';
+            zElement.style.background = aOnColor;
+        }
+        else
+        {
+            zElement.title = 'Client Debug Off';
+            zElement.style.background = aOffColor;
+        }
+        
+        for (var I in fDebugClientChangedEventArr)
+            fDebugClientChangedEventArr[I]();
+        
+    };
     
+    fConstructor.addDebugClientChangedEvent = function(aEvent)
+    {
+        fDebugClientChangedEventArr.push(aEvent);
+    };
+    
+    fConstructor.isClientDebugOn = function()
+    {
+        return isClientDebugOn_();
+    };
+    var isClientDebugOn_ = function()
+    {
+        return fClientDebugOn;
+    };
+    
+    fConstructor.DebugTypes = 
+            {
+                Feedback: 'Feedback',
+                ConsoleInfo: 'ConsoleInfo',
+                ConsoleError: 'ConsoleError'
+            };
+
+    fConstructor.debug = function (aType, aMsg)
+    {
+        debug_(aType, aMsg);
+    };
+    var debug_ = function (aType, aMsg)
+    {
+        if (!isClientDebugOn_())
+            return;
+        
+        switch (aType)
+        {
+            case fConstructor.DebugTypes.Feedback:
+                debugFeedback_(aMsg);
+                break;
+
+            case fConstructor.DebugTypes.ConsoleInfo:
+                console.info(aMsg);
+                break;
+                
+            case fConstructor.DebugTypes.ConsoleError:
+                console.error(aMsg);
+                break;
+        }
+    };
+    
+    //--------
     fConstructor.requestFromServer = function(aRequest)
     {
         //alert('Play VR');
@@ -234,7 +308,7 @@ var SystemEx = function()
         if (isDesktopApplication())
             callBrowser(aUrl, true);
         else
-        if (SystemEx.isBrowser())
+        if (fConstructor.isBrowser())
             window.open(aUrl, "_blank");
         else //mobile   
             window.open(aUrl, "_system");//openURL_(aUrl);

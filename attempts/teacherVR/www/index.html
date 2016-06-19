@@ -35,8 +35,16 @@ and open the template in the editor.
             <!--statusbar-->
             <div  id="statusbar_div_id" data-role="none" class="ui-footer-fixed class_statusbar_div">    
 
-                <button id="debug_button_id" onclick="TeacherVR.toggleServerDebug();"  class="class_statusbar_items class_statusbar_buttons" style="float: right; " title="Server Debug Off">
-                    <img id='debug_server_img_id' src="img/debug_server_16x16.png" alt="D">
+                <button id="debug_server_button_id" onclick="TeacherVR.toggleServerDebug();"  class="class_statusbar_items class_statusbar_buttons" style="float: right; " title="Server Debug Off">
+                    <img id='debug_server_img_id' src="img/debug_server_16x16.png" alt="SD">
+                </button>
+                
+                <button id="debug_client_button_id" onclick="TeacherVR.toggleClientDebug();"  class="class_statusbar_items class_statusbar_buttons" style="float: right; " title="Client Debug Off">
+                    <img id='debug_client_img_id' src="img/debug_16x16.png" alt="CD">
+                </button>
+                
+                <button id="show_device_info_button_id" onclick="TeacherVR.showDeviceInfo();"  class="class_statusbar_items class_statusbar_buttons" style="float: right; display: none" title="Show Device Info">
+                    <img id='show_device_info_button_img_id' src="img/device_info_16x16.png" alt="i">
                 </button>
                 
             </div> <!--statusbar-->
