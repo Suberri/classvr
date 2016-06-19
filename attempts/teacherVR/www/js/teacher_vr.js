@@ -1,12 +1,22 @@
-/* global device, SystemEx, device*/
+/* global device, SystemEx, device, ServerVR*/
 
 'use strict';
 
 var TeacherVR = function()
 {
-    var fDebug = "true"; //true only with 'true', can set on run
-    
+    var fDebug = "false"; //true only with 'true', can set on run
     var fDeviceInfoMap;
+    
+    var ClientType = {
+          Student: 'Student',
+          Teacher: 'Teacher',
+          Browser: 'Browser'
+    };
+    
+    var fClientType;// ClientType.Student;
+
+    //---- Elements ------
+    var fJsH2ClientInfoTitleElement = $('#h2_client_info_title_id');
     
 
     //call on new
@@ -18,24 +28,35 @@ var TeacherVR = function()
     
     fConstructor.init = function()
     {
-        debug(DebugTypes.ConsoleInfo, '------------- Started _Sima_ -------------------');
-        initMainPage();
+        debug(DebugTypes.ConsoleInfo, '------------- Started -------------------');
+        
+        setTimeout(function()
+        {
+            setClientType();
+            initMainPage();
+        }, 300); //give time to the onDeviceReady()
+            
     };
 
     var initMainPage = function()
     {
-        if (typeof device !== "undefined")// && device.platform === "Android")
-        {
-            var zUuid = device.uuid;
-            alert('huid =' + zUuid);
-        }
         try
         {
-           
+            //fH2ClientInfoTitleElement = document.getElementById('h2_client_info_title_id'); 
+//            alert('initMainPage: DeviceInfoMap = ' + fDeviceInfoMap);
+//            if (fDeviceInfoMap)// && device.platform === "Android")
+//            {
+//                var zUuid = fDeviceInfoMap['uuid'];
+//                alert('huid =' + zUuid);
+//            }
+            
+            setClientTypeInfo();
+            
+            
         }
         catch (ex)
         {
-            
+            alert("Init problem: " + ex);
         }
         finally
         {
@@ -96,7 +117,7 @@ var TeacherVR = function()
         }
         catch (ex)
         {
-             alert('ex initBeforeReady: ' + ex);           
+             alert('Exception initBeforeReady: ' + ex);           
         }
     };//fConstructor.initBeforeReady = function()
     
@@ -139,7 +160,11 @@ var TeacherVR = function()
     {
         //if (typeof device === "undefined")
         if (!fDeviceInfoMap)
+        {
+            alert('No info for this device.');
             return;
+        }
+        
         var zDeviceInfo = //JSON.stringify(fDeviceInfoMap);
                     'Device Name: '     + fDeviceInfoMap['name'] + '\n' + //'<br />'
                     'Device Cordova: '  + fDeviceInfoMap['cordova'] + '\n' +
@@ -181,8 +206,40 @@ var TeacherVR = function()
             //saveGlobals();
         }
 
-    }                
+    }              
     
+    var setClientType = function()
+    {
+        if (fDeviceInfoMap)
+        {
+            var zUuid = fDeviceInfoMap['uuid'];
+            var zType = ServerVR.requestClientTypeFromServer(zUuid); 
+            if (zType === 1)
+                fClientType = ClientType.Teacher;
+            else
+                fClientType = ClientType.Student;
+        }
+        else
+            fClientType = ClientType.Browser;
+    };
+    
+    var setClientTypeInfo = function()
+    { 
+        if (!fClientType)
+            return;
+        if (fClientType === ClientType.Teacher)
+        {
+            fJsH2ClientInfoTitleElement[0].innerHTML = ClientType.Teacher;
+        }
+        else
+        if (fClientType === ClientType.Student)
+        {
+            fJsH2ClientInfoTitleElement[0].innerHTML = ClientType.Student;
+        }
+        else
+            fJsH2ClientInfoTitleElement[0].innerHTML = ClientType.Browser;
+    };
+        
     fConstructor.playVR = function()
     {
         //alert('Play VR');
