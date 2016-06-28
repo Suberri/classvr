@@ -65,7 +65,8 @@ class classvrRequestHandler (BaseHTTPRequestHandler) :
         
         
     def checkPath(self):
-        self.reqParts=self.path.split(r'/')
+        self.reqParts=self.parsed_path.path.split(r'/')
+        print self.reqParts
         if len(self.reqParts) < 2:
             return 'invalid req'
         del self.reqParts[0]
@@ -135,13 +136,15 @@ class classvrRequestHandler (BaseHTTPRequestHandler) :
         reqNumber +=1
         getReqNumber +=1
         self.errorMsg=None
-        parsed_path = urlparse.urlparse(self.path)
+        self.parsed_path = urlparse.urlparse(self.path)
         message = self.getMsgInfo()
         if self.checkPath() == 0:
             message=self.procReq(self.reqParts)
+            self.send_response(200)
         else: 
-           message="*** " + self.errorMsg+"\r\n"+message
-        self.send_response(200)
+           message="*** " + self.errorMsg+" 400 ****\r\n"+message
+           self.send_response(400)
+           
         self.send_header('Access-Control-Allow-Origin', '*')
         
         self.end_headers()
