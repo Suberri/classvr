@@ -139,7 +139,8 @@ class classvrRequestHandler (BaseHTTPRequestHandler) :
         message = self.getMsgInfo()
         if self.checkPath() == 0:
             message=self.procReq(self.reqParts)
-        else: message=self.errorMsg   
+        else: 
+           message="*** " + self.errorMsg+"\r\n"+message
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         
