@@ -1,0 +1,1 @@
+cordova-plugin-device-rel-1.1.2 --> cordova-plugin-device

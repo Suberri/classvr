@@ -171,7 +171,9 @@ made subject to such option by the copyright holder.
 
     <target name="rebuild-ios" depends="clean-ios,build-ios"/>
 
-    <target name="build-ios" depends="create-ios,update-plugins,update-ios,build-ios-xcodebuild,build-ios-ipa"/>
+    <!--ami_-->
+    <!--<target name="build-ios" depends="create-ios,update-plugins,update-ios,build-ios-xcodebuild,build-ios-ipa"/>-->
+    <target name="build-ios" depends="create-ios,update-ios,build-ios-xcodebuild,build-ios-ipa"/>
 
     <target name="build-ios-xcodebuild">
         <property name="path" location="platforms/ios/build"/>
@@ -231,9 +233,10 @@ made subject to such option by the copyright holder.
         </exec> 
     </target>
     
-    <target name="update-plugins">
+    <!-- ami_-->
+<!--    <target name="update-plugins">
         <plugintask/>
-    </target>    
+    </target>    -->
     
     <target name="update-android">
         <echo level="info" message="${cordova.command} prepare android"/>
@@ -259,7 +262,9 @@ made subject to such option by the copyright holder.
     
     <target name="rebuild-android" depends="clean-android,build-android"/>      
     
-    <target name="build-android" depends="create-android,update-plugins">
+    <!--ami_-->
+    <!--<target name="build-android" depends="create-android,update-plugins">-->
+    <target name="build-android" depends="create-android">
         <echo level="info" message="${cordova.command} -d build android"/>
         <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true">
             <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
@@ -270,7 +275,9 @@ made subject to such option by the copyright holder.
         </exec>
     </target>    
     
-    <target name="sim-android" depends="create-android,update-plugins">
+    <!--ami_-->
+    <!--<target name="sim-android" depends="create-android,update-plugins">-->
+    <target name="sim-android" depends="create-android">
         <echo level="info" message="${cordova.command} -d ${android.target.device.arg} android"/>
         <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true">
             <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
