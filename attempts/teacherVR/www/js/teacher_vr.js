@@ -4,7 +4,14 @@
 
 var TeacherVR = function()
 {
+    var fServerDebugOn = false;
+    
+    var fIP = '192.168.2.109'; //localhost '192.168.2.109'; //'192.168.43.88';
+    var fPort = '8181';
     var fDeviceInfoMap;
+    
+    var fJsMainTextAreaElement = $('#main_textarea_id');
+    
     
     var ClientType = {
           Student: 'Student',
@@ -31,6 +38,10 @@ var TeacherVR = function()
         
         SystemEx.addDebugClientChangedEvent(debugClientChangedEvent);
         
+        ServerVR.setIP(fIP);
+        ServerVR.setPort(fPort);
+        ServerVR.initHttpGet();
+        
         setTimeout(function()
         {
             setClientType();
@@ -50,6 +61,9 @@ var TeacherVR = function()
 //                var zUuid = fDeviceInfoMap['uuid'];
 //                alert('huid =' + zUuid);
 //            }
+            
+            //moshe_: have to get the mode from the server e.g. debug/info/?
+            setServerDebug(false);
             
             setClientTypeInfo();
             
@@ -226,12 +240,69 @@ var TeacherVR = function()
     fConstructor.playVR = function()
     {
         //alert('Play VR');
-        SystemEx.requestFromServer('teacher/action/session-play');
+        //SystemEx.requestFromServer('teacher/action/session-play');
+        
+        fJsMainTextAreaElement[0].value = 'Waiting...';
+        
+        var zRequest = 'teacher/action/session-play';
+        ServerVR.requestGetFromServer(zRequest, showPlayVR);
+        //ServerVR.requestGetFromServer('http://www.google.com', showPlayVR);
+    };
+    
+    var showPlayVR = function (aSucceed, aResponseText)
+    {
+        if (!aSucceed)
+        {
+            fJsMainTextAreaElement[0].value = 'Play VR failed: ' + aResponseText;
+            return;
+        }
+        
+        fJsMainTextAreaElement[0].value = aResponseText;
     };
     
     fConstructor.toggleServerDebug = function()
     {
-        SystemEx.toggleServerDebug('debug_server_button_id', 'red', '');
+        fJsMainTextAreaElement[0].value = 'Waiting...';
+        
+        setServerDebug(!fServerDebugOn);
+        
+        //SystemEx.toggleServerDebug('debug_server_button_id', 'red', '');
+    };
+    
+    var setServerDebug = function(aOn)
+    {
+        var zOnOff = aOn ? 'on' : 'off';
+        var zRequest = 'debug/info/' + zOnOff;
+        ServerVR.requestGetFromServer(zRequest, showDebugMode);
+        
+        //SystemEx.toggleServerDebug('debug_server_button_id', 'red', '');
+    };
+
+    var showDebugMode = function (aSucceed, aResponseText)
+    {
+        if (!aSucceed)
+        {
+            fJsMainTextAreaElement[0].value = 'Request Debug Mode failed: ' + aResponseText;
+            return;
+        }
+        else
+        {
+            fJsMainTextAreaElement[0].value = aResponseText;
+        }
+        
+        var zElement = document.getElementById('debug_server_button_id');
+        if (aResponseText === 'debugInfo ON') 
+        {//debugInfo ON
+            fServerDebugOn = true;
+            zElement.title = 'Server Debug On';
+            zElement.style.background = 'red';
+        }
+        else
+        {//debugInfo OFF
+            fServerDebugOn = false;
+            zElement.title = 'Server Debug Off';
+            zElement.style.background = '';
+        }
     };
 
     fConstructor.toggleClientDebug = function()

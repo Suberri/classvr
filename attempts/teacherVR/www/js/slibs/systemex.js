@@ -11,10 +11,6 @@
 var SystemEx = function()
 {
 
-    var fServerDebugOn = false;
-    var fIP = 'localhost'; //'192.168.2.109'; //'192.168.43.88';
-    var fPort = '8181';
-
     var fClientDebugOn = false; //true only with 'true', can set on run
     var fDebugClientChangedEventArr = [];
 
@@ -187,45 +183,6 @@ var SystemEx = function()
     //----------------
     //----------------
     
-    fConstructor.setIP = function(aIP)
-    {
-        fIP = aIP;
-    };
-    fConstructor.setPort = function(aPort)
-    {
-        fPort = aPort;
-    };
-
-    
-    fConstructor.toggleServerDebug = function(aElementID, aOnColor, aOffColor)
-    {
-        fServerDebugOn = !fServerDebugOn;
-        var zOnOff = fServerDebugOn ? 'on' : 'off';
-        fConstructor.requestFromServer('debug/info/' + zOnOff);
-        
-        var zElement = document.getElementById(aElementID);
-        if (fConstructor.isServerDebugOn())
-        {
-            zElement.title = 'Server Debug On';
-            zElement.style.background = aOnColor;
-        }
-        else
-        {
-            zElement.title = 'Server Debug Off';
-            zElement.style.background = aOffColor;
-        }
-        
-    };
-    
-    fConstructor.isServerDebugOn = function()
-    {
-        return isServerDebugOn_();
-    };
-    var isServerDebugOn_ = function()
-    {
-        return fServerDebugOn;
-    };
-
     fConstructor.toggleClientDebug = function(aElementID, aOnColor, aOffColor)
     {
         fClientDebugOn = !fClientDebugOn;
@@ -279,7 +236,7 @@ var SystemEx = function()
         switch (aType)
         {
             case fConstructor.DebugTypes.Feedback:
-                debugFeedback_(aMsg);
+                //debugFeedback_(aMsg);
                 break;
 
             case fConstructor.DebugTypes.ConsoleInfo:
@@ -293,10 +250,10 @@ var SystemEx = function()
     };
     
     //--------
-    fConstructor.requestFromServer = function(aRequest)
+    fConstructor.requestFromServerOnBrowser = function(aIP, aPort, aRequest)
     {
         //alert('Play VR');
-        openURL('http://' + fIP + ':' + fPort + '/classvr/' + aRequest);
+        openURL('http://' + aIP + ':' + aPort + '/classvr/' + aRequest);
     };
     
     var openURL = function(aUrl)

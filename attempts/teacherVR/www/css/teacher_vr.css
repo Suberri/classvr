@@ -94,3 +94,29 @@
     height: 20px!important;
     width: 21px!important;
 }
+
+#div_client_area
+{
+    width: 100%!important;
+}
+
+#div_main_textarea_id{
+    border: solid black thick;
+    border-width: 0px;
+
+    overflow-x: auto;
+    overflow-y: scroll;
+}
+
+#main_textarea_id
+{
+    position: absolute;
+    top: 14%;
+    left: 3%;
+    width: 150%;
+    height: 150%!important;
+    /*#F8F8F8!important;*/
+    background: lightblue;
+        
+    font-size: 1.1em!important;  
+}
