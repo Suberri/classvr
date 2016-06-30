@@ -13,7 +13,6 @@ import pdb
 import BaseHTTPServer
 import Queue
 
-pdb.set_trace()
 
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn

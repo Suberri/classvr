@@ -10,38 +10,27 @@ __email__ = "suberri@gmail.com"
 import os
 import sys
 import pdb
-#from conf.conf import envInit
-
 
 breakpoint=pdb.set_trace
 
-class envInit:
+class envInit:                              # add all local folder packages to the sys.path
     def __init__(self):    
-        folderList=[] 
         for f in os.walk('.'):
             folder=f[0]
-            if os.path.isfile(os.path.join(folder,'__init__.py')):
-                folderList.append(folder)
-        for pkg in folderList:
-            sys.path.insert(0,pkg) 
-
-def startMultiThreadsServer():
-    from vrserver import mtServer
-    mtServer()
-
-def startClient():
-    print ('start classvr client')       
-    
+            if os.path.isfile(os.path.join(f[0],'__init__.py')):
+                sys.path.insert(0,f[0]) 
+            
+            
 if __name__ == "__main__":
     
     # set up the system packages path
     envInit()
       
-    breakpoint()
     # start database manager
     from client import clientDbMgr    
     dbMgr=clientDbMgr()
     
-    # start the http server
-    startMultiThreadsServer() 
+    # start multi thread http server
+    from vrserver import mtServer
+    mtServer()    
     
