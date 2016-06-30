@@ -13,16 +13,19 @@ from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import threading
 
+from client import client
+from client import clientDbMgr
+
 INVALID_REQUEST=1001
 
 helpMsg=r'help msg'
-debugInfo='off'
+debugInfo='on'
 reqNumber=0
 getReqNumber=0
 postReqNumber=0
 
 
-reqSchema      = { 0:'classvr',1:['debug','info','teacher','student'],2:'action'}
+reqSchema    = { 0:'classvr',1:['init','debug','info','teacher','student'],2:'action'}
 teacherActions = ['session-play','session-pause','session-restart','session-close']
 studentActions = ['get-next']
          
@@ -51,8 +54,17 @@ def student(req,reqHanderInstance=None):
     reqCmd='.'.join(req)
     return '*** Request Number = {0}  ***\n Got a student request - {1}'.format(reqNumber,reqCmd)
 
+def genericClient(req,reqHanderInstance=None):
+    global reqNumber, getReqNumber
+    reqCmd='.'.join(req)
+    return '*** Request Number = {0}  ***\n Got a client init request - {1}'.format(reqNumber,reqCmd)  
+    myClient=client()
+    ret,msg=myClient.initReq(req,reqHanderInstance)
+    return msg
     
-reqHandlers = {  'classvr':section,'teacher':teacher,'student':student}            
+    
+    
+reqHandlers = {'classvr':section,'teacher':teacher,'student':student,'init':genericClient}            
 
         
 class classvrRequestHandler (BaseHTTPRequestHandler) :     
@@ -170,7 +182,7 @@ class classvrRequestHandler (BaseHTTPRequestHandler) :
             self.respone(msg)
             
 instanceReqHandlers = {'info':classvrRequestHandler.getMsgInfo,
-                                   'debug':classvrRequestHandler.debugReq,
-                                   'debug.info.on':classvrRequestHandler.debugInfoOn,
-                                   'debug.info.off':classvrRequestHandler.debugInfoOff
+                        'debug':classvrRequestHandler.debugReq,
+                        'debug.info.on':classvrRequestHandler.debugInfoOn,
+                        'debug.info.off':classvrRequestHandler.debugInfoOff
                                    }

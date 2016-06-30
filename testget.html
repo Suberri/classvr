@@ -1,0 +1,27 @@
+<div id="id01"></div>
+
+<script>
+var out1 = "accessing http://localhost:8181/classvr/info";
+document.getElementById("id01").innerHTML = out1;
+
+var xmlhttp = new XMLHttpRequest();
+var url = "http://localhost:8181/classvr/info";
+
+xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var myArr = xmlhttp.responseText;
+        myFunction(myArr);
+    }
+};
+
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+function myFunction(arr) {
+    var out = arr.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    out = out.replace(/(?: )/g, '&nbsp;&nbsp;'); 
+    document.getElementById("id01").innerHTML = out;
+}
+
+
+</script>

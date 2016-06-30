@@ -21,6 +21,12 @@ Main Screen:
           Pause
           continue
           close
+          
+RESTfull commands
+    .../classvr/init?{device:{uuid:device_id[,....]}, [user:{...}}
+          device block with the uuid is mandatory
+    
+    
     Debug
     .../classvr/debug/info/on
     .../classvr/debug/info/off
@@ -38,6 +44,19 @@ api account signup
    ..../classvr/signup/<account info username password>
    ..../classvr/login/<account info username password>
 
+ api for all devices on startup
+ /test/demo_form.asp?name1=value1&name2=value2
+  ..../classvr/teacher/whoami?uuid=device uuid
+      response:
+                uuid.device.teacher 
+                uuid.device.student
+                uuid.device.unknowen
+  ..../classvr/teacher/getvrlist
+    list of the vr files
+    
+                
+                
+ 
 api for teacher device:
    ..../classvr/teacher/init/<info avbout the device>
    ..../classvr/teacher/setting/<teacher device info>
