@@ -47,6 +47,7 @@ var ServerVR = function()
     };
 
     //moshe_ i need to send my id and to get it back from you
+    //var zUrl = 'http://' + fIP + ':' + fPort + '/classvr/    int?{device: {}}';
     var requestGetFromServer_ = function (aRequest, aCallBack)
     {
         fCallBack = aCallBack;
