@@ -44,6 +44,9 @@ var TeacherVR = function()
         
         setTimeout(function()
         {
+            if (!fDeviceInfoMap)
+                getDeviceInfo();
+            
             setClientType();
             initMainPage();
         }, 300); //give time to the onDeviceReady()
@@ -122,6 +125,16 @@ var TeacherVR = function()
         
         //alert('onDeviceReady');
         debug(SystemEx.DebugTypes.ConsoleInfo, '-- onDeviceReady --');
+        
+        getDeviceInfo();
+        
+        //navigator.app.overrideBackbutton(true);Deprecating
+        document.addEventListener("backbutton", onBackClickEvent, false);
+        //document.addEventListener("menubutton", onMenuClickEvent, false);
+    };//fConstructor.onDeviceReady = function()
+    
+    var getDeviceInfo = function()
+    {
         //need cordova-plugin-device and prevent update-plugins see build.xml in nbproject folder
         //this prevent not working every second send to android, after you set the plugin with
         //command in platform/android folder: cordova plugin add cordova-plugin-device
@@ -137,16 +150,19 @@ var TeacherVR = function()
             fDeviceInfoMap['version'] = device.version;
             fDeviceInfoMap['model'] = device.model;
 
-            if (isClientDebug_())        
-            {
-                showDeviceInfo();
-            }
         }//if (typeof device !== "undefined")
+        else
+        {
+            fDeviceInfoMap = {};
+            fDeviceInfoMap['name'] = 'Desktop';
+            fDeviceInfoMap['cordova'] = 'None';
+            fDeviceInfoMap['platform'] = 'process.platform';
+            fDeviceInfoMap['uuid'] = 1111;
+            fDeviceInfoMap['version'] = '';
+            fDeviceInfoMap['model'] = '';
+        }
             
-            //navigator.app.overrideBackbutton(true);Deprecating
-        document.addEventListener("backbutton", onBackClickEvent, false);
-        //document.addEventListener("menubutton", onMenuClickEvent, false);
-    };//fConstructor.onDeviceReady = function()
+    };
 
     fConstructor.showDeviceInfo = function()
     {
@@ -245,11 +261,11 @@ var TeacherVR = function()
         fJsMainTextAreaElement[0].value = 'Waiting...';
         
         var zRequest = 'teacher/action/session-play';
-        ServerVR.requestGetFromServer(zRequest, showPlayVR);
+        ServerVR.requestGetFromServer(zRequest, playVRCallback);
         //ServerVR.requestGetFromServer('http://www.google.com', showPlayVR);
     };
     
-    var showPlayVR = function (aSucceed, aResponseText)
+    var playVRCallback = function (aSucceed, aResponseText)
     {
         if (!aSucceed)
         {
@@ -259,6 +275,34 @@ var TeacherVR = function()
         
         fJsMainTextAreaElement[0].value = aResponseText;
     };
+    
+    //---------------------------
+    
+    fConstructor.initDevice = function()
+    {
+        //alert('Play VR');
+        //SystemEx.requestFromServer('teacher/action/session-play');
+        
+        fJsMainTextAreaElement[0].value = 'Waiting...';
+        
+        var zRequest = 'init?' + '{device: '  + JSON.stringify(fDeviceInfoMap) + '}';
+        ServerVR.requestGetFromServer(zRequest, initDeviceCallback);
+        //ServerVR.requestGetFromServer('http://www.google.com', showPlayVR);
+    };
+    
+    var initDeviceCallback = function(aSucceed, aResponseText)
+    {
+        if (!aSucceed)
+        {
+            fJsMainTextAreaElement[0].value = 'Init Device failed: ' + aResponseText;
+            return;
+        }
+        
+        fJsMainTextAreaElement[0].value = aResponseText;
+        
+    };
+    
+    //---------------------------
     
     fConstructor.toggleServerDebug = function()
     {
@@ -273,12 +317,12 @@ var TeacherVR = function()
     {
         var zOnOff = aOn ? 'on' : 'off';
         var zRequest = 'debug/info/' + zOnOff;
-        ServerVR.requestGetFromServer(zRequest, showDebugMode);
+        ServerVR.requestGetFromServer(zRequest, setServerDebugCallback);
         
         //SystemEx.toggleServerDebug('debug_server_button_id', 'red', '');
     };
 
-    var showDebugMode = function (aSucceed, aResponseText)
+    var setServerDebugCallback = function (aSucceed, aResponseText)
     {
         if (!aSucceed)
         {
@@ -304,6 +348,8 @@ var TeacherVR = function()
             zElement.style.background = '';
         }
     };
+    
+    //-----------------------------
 
     fConstructor.toggleClientDebug = function()
     {
