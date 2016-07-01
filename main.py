@@ -11,18 +11,26 @@ import os
 import sys
 import pdb
 
-packages=['server','api','conf']
+breakpoint=pdb.set_trace
 
-def startMultiThreadsServer():
-    from vrserver import mtServer
-    mtServer()
+class envInit:                              # add all local folder packages to the sys.path
+    def __init__(self):    
+        for f in os.walk('.'):
+            folder=f[0]
+            if os.path.isfile(os.path.join(f[0],'__init__.py')):
+                sys.path.insert(0,f[0]) 
+            
+            
+if __name__ == "__main__":
     
-
-def startClient():
-    print ('start classvr client')
-   
-if __name__ == "__main__":  
-    for pkg in packages:
-        sys.path.insert(0,pkg)  
-    startMultiThreadsServer() 
+    # set up the system packages path
+    envInit()
+      
+    # start database manager
+    from client import clientDbMgr    
+    dbMgr=clientDbMgr()
+    
+    # start multi thread http server
+    from vrserver import mtServer
+    mtServer()    
     
