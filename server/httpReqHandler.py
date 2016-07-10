@@ -12,6 +12,7 @@ import pdb
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import threading
+import urllib
 
 from client import client
 from client import clientDbMgr
@@ -118,22 +119,24 @@ class classvrRequestHandler (BaseHTTPRequestHandler) :
     def getMsgInfo(self,req=None):
         global reqNumber, getReqNumber
         parsed_path = urlparse.urlparse(self.path)
+        query=urllib.unquote(parsed_path.query)
+        query=query.split('=',1)[-1].lstrip()
         message_parts = [
                 '*** Request Number = {0}  ***'.format(reqNumber),
                 'THREADING VALUES:',
                 '   thread Name={0}'.format(threading.currentThread().getName()),
                 'CLIENT VALUES:',
                 '   client_address=%s (%s)' % (self.client_address,self.address_string()),
-                '   command=%s' % self.command,
-                '   path=%s' % self.path,
-                '   real path=%s' % parsed_path.path,
-                '   query=%s' % parsed_path.query,
-                '   request_version=%s' % self.request_version,
+                '   command=%s' %        self.command,
+                '   path=%s' %             self.path,
+                '   real path=%s' %         parsed_path.path,
+                '   query=%s' %            query,
+                '   request_version=%s' %  self.request_version,
                 '',
                 'SERVER VALUES:',
-                '   server_version=%s' % self.server_version,
-                '   sys_version=%s' % self.sys_version,
-                '   protocol_version=%s' % self.protocol_version,
+                '   server_version=%s' %    self.server_version,
+                '   sys_version=%s' %       self.sys_version,
+                '   protocol_version=%s' %   self.protocol_version,
                 '',
                 'HEADERS RECEIVED:',
                 ]
